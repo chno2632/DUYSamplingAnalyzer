@@ -74,31 +74,50 @@ for i in range(len(timeIndexes)):
     print(timestamp.strftime('%Y-%m-%d %H:%M:%S : ') + str(time[timeIndexes[i]]))
 
 # Count if number of samples between timestamps are reasonable close to the sampling rate
-
+#Use raw data file
 numberOfSamples = 0
 lastTimeStamp = 0
 distanceInTime = 0
 distanceInSamples = 0
 firstTimeExecuted = True
+
+
+nmbOfSamplesBetweenTimestamp = []
+#Count number of samples between each timestamp
 for i in range(len(rawData)):
     val = int(rawData[i])
     if val < 16384:
         numberOfSamples += 1
     else:
-        if firstTimeExecuted:
-            lastTimeStamp = val
-        print("Number of samples = " + str(numberOfSamples) + " at timestamp " + str(val))
-        distanceInTime = val - lastTimeStamp - 1
-        distanceInSamples = numberOfSamples
-        print("Distance in samples is: " + str(distanceInSamples))
-        if firstTimeExecuted:
-            firstTimeExecuted = False
-            print("Distance in time is: " + str(distanceInTime+1) + " seconds")
-        else:
-            print("Distance in time is: " + str(distanceInTime) + " seconds")
+        # timestamp reached
+        nmbOfSamplesBetweenTimestamp.append(int(numberOfSamples))
         numberOfSamples = 0
-        lastTimestamp = val
-        print("")
+
+print(nmbOfSamplesBetweenTimestamp)
+
+# Count number of seconds ibetween timestamps
+numberOfSecondsBetweenTimestamps = []
+lastTimeTime = int(timeIndexes[0])
+for i in range(len(timeIndexes) - 1):
+    thisTimeTime = int(timeIndexes[i+1])
+    numberOfSecondsBetweenTimestamps.append(thisTimeTime-lastTimeTime)
+    lastTimeTime = thisTimeTime
+
+print("0, " + str(numberOfSecondsBetweenTimestamps))
+        # if firstTimeExecuted:
+        #     lastTimeStamp = val
+        # print("Number of samples = " + str(numberOfSamples) + " at timestamp " + str(val))
+        # distanceInTime = val - lastTimeStamp - 1
+        # distanceInSamples = numberOfSamples
+        # print("Distance in samples is: " + str(distanceInSamples))
+        # if firstTimeExecuted:
+        #     firstTimeExecuted = False
+        #     print("Distance in time is: " + str(distanceInTime+1) + " seconds")
+        # else:
+        #     print("Distance in time is: " + str(distanceInTime) + " seconds")
+        # numberOfSamples = 0
+        # lastTimestamp = val
+        # print("")
 #Check if approximation of 1 secnd in between every sample or if any disruption may have occured
 
 
