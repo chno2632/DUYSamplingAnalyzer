@@ -1,4 +1,4 @@
-
+from matplotlib import pyplot as plt
 import datetime
 # ADC maximumm value 14 bits? == 16383
 with open("SMPLOG3_240523.txt") as datasource:
@@ -83,7 +83,7 @@ firstTimeExecuted = True
 
 
 nmbOfSamplesBetweenTimestamp = []
-#Count number of samples between each timestamp
+#Count the numbers of samples between each timestamp
 for i in range(len(rawData)):
     val = int(rawData[i])
     if val < 16384:
@@ -93,7 +93,7 @@ for i in range(len(rawData)):
         nmbOfSamplesBetweenTimestamp.append(int(numberOfSamples))
         numberOfSamples = 0
 
-print(nmbOfSamplesBetweenTimestamp)
+print("Number of samples between each timestamp :    " + str(nmbOfSamplesBetweenTimestamp))
 
 # Count number of seconds ibetween timestamps
 numberOfSecondsBetweenTimestamps = []
@@ -103,28 +103,92 @@ for i in range(len(timeIndexes) - 1):
     numberOfSecondsBetweenTimestamps.append(thisTimeTime-lastTimeTime)
     lastTimeTime = thisTimeTime
 
-print("0, " + str(numberOfSecondsBetweenTimestamps))
-        # if firstTimeExecuted:
-        #     lastTimeStamp = val
-        # print("Number of samples = " + str(numberOfSamples) + " at timestamp " + str(val))
-        # distanceInTime = val - lastTimeStamp - 1
-        # distanceInSamples = numberOfSamples
-        # print("Distance in samples is: " + str(distanceInSamples))
-        # if firstTimeExecuted:
-        #     firstTimeExecuted = False
-        #     print("Distance in time is: " + str(distanceInTime+1) + " seconds")
-        # else:
-        #     print("Distance in time is: " + str(distanceInTime) + " seconds")
-        # numberOfSamples = 0
-        # lastTimestamp = val
-        # print("")
-#Check if approximation of 1 secnd in between every sample or if any disruption may have occured
-
-
-#print(datetime.fromtimestamp(ts).strftime('%Y-%m-%d %H:%M:%S'))
-#unixTime = time[0]
-#print(datetime.utcfromtimestamp(unixTime).strftime('%Y-%m-%d %H:%M:%S'))
+print("Difference in seconds between each timestamp : " + "0," + str(numberOfSecondsBetweenTimestamps))
 
 
 
-# Now create timestamps for zero-time
+
+  # Create graphical presentation of each timeslot-interval (The samples from a timeslot
+  # until the last sample before the next timeslot
+  # !!! For this specific input file assuming 1 second between samples are ok
+
+#  U = ns * (5 *77,4/20,4)/16384 =  1,15787* 10^-3 = 0,00115787
+Ufac = 0.00115787
+graph_x = []
+graph_y = []
+
+timestampvalue = time[timeIndexes[0]]
+print(str(nmbOfSamplesBetweenTimestamp[1]))
+print(str(timestampvalue))
+for i in range(nmbOfSamplesBetweenTimestamp[1]):
+    graph_x.append(Ufac*value[i])
+    graph_y.append(timestampvalue)
+    timestampvalue += 1
+
+print(str(graph_x))
+print(graph_y)
+
+timestamp = datetime.datetime.fromtimestamp(timestampvalue)
+plt.xlabel(timestamp.strftime('%Y-%m-%d %H:%M:%S'))
+
+plt.plot(graph_y, graph_x, color='r', linestyle='--', marker='.')
+plt.show()
+
+timestampvalue = time[timeIndexes[1]]
+print(str(nmbOfSamplesBetweenTimestamp[2]))
+print(str(timestampvalue))
+for i in range(nmbOfSamplesBetweenTimestamp[2]):
+    graph_x.append(Ufac*value[i])
+    graph_y.append(timestampvalue)
+    timestampvalue += 1
+
+print(str(graph_x))
+print(graph_y)
+
+plt.plot(graph_y, graph_x, color='r', linestyle='--', marker='.')
+plt.show()
+
+
+timestampvalue = time[timeIndexes[2]]
+print(str(nmbOfSamplesBetweenTimestamp[3]))
+print(str(timestampvalue))
+for i in range(nmbOfSamplesBetweenTimestamp[3]):
+    graph_x.append(Ufac*value[i])
+    graph_y.append(timestampvalue)
+    timestampvalue += 1
+
+print(str(graph_x))
+print(graph_y)
+
+plt.plot(graph_y, graph_x, color='r', linestyle='--', marker='.')
+plt.show()
+
+
+timestampvalue = time[timeIndexes[3]]
+print(str(nmbOfSamplesBetweenTimestamp[4]))
+print(str(timestampvalue))
+for i in range(nmbOfSamplesBetweenTimestamp[4]):
+    graph_x.append(Ufac*value[i])
+    graph_y.append(timestampvalue)
+    timestampvalue += 1
+
+print(str(graph_x))
+print(graph_y)
+
+plt.plot(graph_y, graph_x, color='r', linestyle='--', marker='.')
+plt.show()
+
+timestampvalue = time[timeIndexes[4]]
+print(str(nmbOfSamplesBetweenTimestamp[5]))
+print(str(timestampvalue))
+for i in range(nmbOfSamplesBetweenTimestamp[5]):
+    graph_x.append(Ufac*value[i])
+    graph_y.append(timestampvalue)
+    timestampvalue += 1
+
+print(str(graph_x))
+print(graph_y)
+
+plt.plot(graph_y, graph_x, color='r', linestyle='--', marker='.')
+plt.show()
+
