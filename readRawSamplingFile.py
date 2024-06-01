@@ -1,4 +1,7 @@
 from matplotlib import pyplot as plt
+#%matplotlib inline
+import numpy as np
+import pandas as pd
 import datetime
 # ADC maximumm value 14 bits? == 16383
 with open("SMPLOG3_240523.txt") as datasource:
@@ -114,81 +117,200 @@ print("Difference in seconds between each timestamp : " + "0," + str(numberOfSec
 
 #  U = ns * (5 *77,4/20,4)/16384 =  1,15787* 10^-3 = 0,00115787
 Ufac = 0.00115787
-graph_x = []
-graph_y = []
+graph_x1 = []
+graph_y1 = []
 
 timestampvalue = time[timeIndexes[0]]
-print(str(nmbOfSamplesBetweenTimestamp[1]))
-print(str(timestampvalue))
-for i in range(nmbOfSamplesBetweenTimestamp[1]):
-    graph_x.append(Ufac*value[i])
-    graph_y.append(timestampvalue)
-    timestampvalue += 1
 
-print(str(graph_x))
-print(graph_y)
-
+# Create time axis in seconds
 timestamp = datetime.datetime.fromtimestamp(timestampvalue)
+timestampStartSeconds = int(timestamp.strftime('%S'))
+
+for i in range(nmbOfSamplesBetweenTimestamp[1]):
+    graph_x1.append(Ufac*value[i+nmbOfSamplesBetweenTimestamp[0]])
+ #   print(Ufac*value[i])
+    graph_y1.append(timestampStartSeconds)
+    timestampStartSeconds += 1
+
+plt.plot(graph_y1, graph_x1, color='r', linestyle='--', marker='.')
 plt.xlabel(timestamp.strftime('%Y-%m-%d %H:%M:%S'))
-
-plt.plot(graph_y, graph_x, color='r', linestyle='--', marker='.')
 plt.show()
 
+
+graph_x2 = []
+graph_y2 = []
 timestampvalue = time[timeIndexes[1]]
-print(str(nmbOfSamplesBetweenTimestamp[2]))
-print(str(timestampvalue))
+
+# Create time axis in seconds
+timestamp = datetime.datetime.fromtimestamp(timestampvalue)
+timestampStartSeconds = int(timestamp.strftime('%S'))
+
 for i in range(nmbOfSamplesBetweenTimestamp[2]):
-    graph_x.append(Ufac*value[i])
-    graph_y.append(timestampvalue)
-    timestampvalue += 1
+    graph_x2.append(Ufac*value[i+nmbOfSamplesBetweenTimestamp[1]])
+    #print(Ufac*value[i])
+    graph_y2.append(timestampStartSeconds)
+    timestampStartSeconds += 1
 
-print(str(graph_x))
-print(graph_y)
-
-plt.plot(graph_y, graph_x, color='r', linestyle='--', marker='.')
+plt.plot(graph_y2, graph_x2, color='r', linestyle='--', marker='.')
+plt.xlabel(timestamp.strftime('%Y-%m-%d %H:%M:%S'))
 plt.show()
 
-
+graph_x3 = []
+graph_y3 = []
 timestampvalue = time[timeIndexes[2]]
-print(str(nmbOfSamplesBetweenTimestamp[3]))
-print(str(timestampvalue))
+
+# Create time axis in seconds
+timestamp = datetime.datetime.fromtimestamp(timestampvalue)
+timestampStartSeconds = int(timestamp.strftime('%S'))
+
+maxValue = 0
+minValue = 16384
+
 for i in range(nmbOfSamplesBetweenTimestamp[3]):
-    graph_x.append(Ufac*value[i])
-    graph_y.append(timestampvalue)
-    timestampvalue += 1
+    graph_x3.append(Ufac*value[i+nmbOfSamplesBetweenTimestamp[2]])
+    #print(Ufac*value[i])
+    graph_y3.append(timestampStartSeconds)
+    timestampStartSeconds += 1
+    val = value[i]
+    if val > maxValue:
+        maxValue = val
+    if val < minValue:
+        minValue = val
 
-print(str(graph_x))
-print(graph_y)
+print("Max value is : " + str(maxValue))
+print("Min value is : " + str(minValue))
+print(len(graph_x3))
 
-plt.plot(graph_y, graph_x, color='r', linestyle='--', marker='.')
+
+plt.plot(graph_y3, graph_x3, color='r', linestyle='--', marker='.')
+plt.xlabel(timestamp.strftime('%Y-%m-%d %H:%M:%S'))
 plt.show()
 
 
+graph_x4 = []
+graph_y4 = []
 timestampvalue = time[timeIndexes[3]]
-print(str(nmbOfSamplesBetweenTimestamp[4]))
-print(str(timestampvalue))
+
+# Create time axis in seconds
+timestamp = datetime.datetime.fromtimestamp(timestampvalue)
+timestampStartSeconds = int(timestamp.strftime('%S'))
+
+maxValue = 0
+minValue = 16384
 for i in range(nmbOfSamplesBetweenTimestamp[4]):
-    graph_x.append(Ufac*value[i])
-    graph_y.append(timestampvalue)
-    timestampvalue += 1
+    graph_x4.append(Ufac*value[i+nmbOfSamplesBetweenTimestamp[3]])
+    #print(Ufac*value[i])
+    graph_y4.append(timestampStartSeconds)
+    timestampStartSeconds += 1
 
-print(str(graph_x))
-print(graph_y)
+    val = value[i]
+    if val > maxValue:
+        maxValue = val
+    if val < minValue:
+        minValue = val
 
-plt.plot(graph_y, graph_x, color='r', linestyle='--', marker='.')
+print("Max value is : " + str(maxValue))
+print("Min value is : " + str(minValue))
+print(len(graph_x4))
+
+plt.plot(graph_y4, graph_x4, color='r', linestyle='--', marker='.')
+plt.xlabel(timestamp.strftime('%Y-%m-%d %H:%M:%S'))
 plt.show()
 
+
+graph_x5 = []
+graph_y5 = []
 timestampvalue = time[timeIndexes[4]]
-print(str(nmbOfSamplesBetweenTimestamp[5]))
-print(str(timestampvalue))
+
+# Create time axis in seconds
+timestamp = datetime.datetime.fromtimestamp(timestampvalue)
+timestampStartSeconds = int(timestamp.strftime('%S'))
+
 for i in range(nmbOfSamplesBetweenTimestamp[5]):
-    graph_x.append(Ufac*value[i])
-    graph_y.append(timestampvalue)
-    timestampvalue += 1
+    graph_x5.append(Ufac*value[i+nmbOfSamplesBetweenTimestamp[4]])
+   # print(Ufac*value[i])
+    graph_y5.append(timestampStartSeconds)
+    timestampStartSeconds += 1
 
-print(str(graph_x))
-print(graph_y)
-
-plt.plot(graph_y, graph_x, color='r', linestyle='--', marker='.')
+plt.plot(graph_y5, graph_x5, color='r', linestyle='--', marker='.')
+plt.xlabel(timestamp.strftime('%Y-%m-%d %H:%M:%S'))
 plt.show()
 
+
+
+#
+# timestampvalue = time[timeIndexes[0]]
+# print(str(nmbOfSamplesBetweenTimestamp[1]))
+# print(str(timestampvalue))
+# for i in range(nmbOfSamplesBetweenTimestamp[1]):
+#     graph_x.append(Ufac*value[i])
+#     graph_y.append(timestampvalue)
+#     timestampvalue += 1
+#
+# print(str(graph_x))
+# print(graph_y)
+#
+# timestamp = datetime.datetime.fromtimestamp(timestampvalue)
+# plt.xlabel(timestamp.strftime('%Y-%m-%d %H:%M:%S'))
+#
+# plt.plot(graph_y, graph_x, color='r', linestyle='--', marker='.')
+# plt.show()
+#
+# timestampvalue = time[timeIndexes[1]]
+# print(str(nmbOfSamplesBetweenTimestamp[2]))
+# print(str(timestampvalue))
+# for i in range(nmbOfSamplesBetweenTimestamp[2]):
+#     graph_x.append(Ufac*value[i])
+#     graph_y.append(timestampvalue)
+#     timestampvalue += 1
+#
+# print(str(graph_x))
+# print(graph_y)
+#
+# plt.plot(graph_y, graph_x, color='r', linestyle='--', marker='.')
+# plt.show()
+#
+#
+# timestampvalue = time[timeIndexes[2]]
+# print(str(nmbOfSamplesBetweenTimestamp[3]))
+# print(str(timestampvalue))
+# for i in range(nmbOfSamplesBetweenTimestamp[3]):
+#     graph_x.append(Ufac*value[i])
+#     graph_y.append(timestampvalue)
+#     timestampvalue += 1
+#
+# print(str(graph_x))
+# print(graph_y)
+#
+# plt.plot(graph_y, graph_x, color='r', linestyle='--', marker='.')
+# plt.show()
+#
+#
+# timestampvalue = time[timeIndexes[3]]
+# print(str(nmbOfSamplesBetweenTimestamp[4]))
+# print(str(timestampvalue))
+# for i in range(nmbOfSamplesBetweenTimestamp[4]):
+#     graph_x.append(Ufac*value[i])
+#     graph_y.append(timestampvalue)
+#     timestampvalue += 1
+#
+# print(str(graph_x))
+# print(graph_y)
+#
+# plt.plot(graph_y, graph_x, color='r', linestyle='--', marker='.')
+# plt.show()
+#
+# timestampvalue = time[timeIndexes[4]]
+# print(str(nmbOfSamplesBetweenTimestamp[5]))
+# print(str(timestampvalue))
+# for i in range(nmbOfSamplesBetweenTimestamp[5]):
+#     graph_x.append(Ufac*value[i])
+#     graph_y.append(timestampvalue)
+#     timestampvalue += 1
+#
+# print(str(graph_x))
+# print(graph_y)
+#
+# plt.plot(graph_y, graph_x, color='r', linestyle='--', marker='.')
+# plt.show()
+#
