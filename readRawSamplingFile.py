@@ -1,7 +1,7 @@
 from matplotlib import pyplot as plt
 #%matplotlib inline
 import numpy as np
-import pandas as pd
+#import pandas as pd
 import datetime
 # ADC maximumm value 14 bits? == 16383
 with open("SMPLOG3_240523.txt") as datasource:
@@ -253,11 +253,14 @@ for nmbOfTs in range(0, len(nmbOfSamplesBetweenTimestamp)):  # Equals number of 
     graphx = []
     graphy = []
     for i in range(nmbOfSamplesBetweenTimestamp[nmbOfTs+1]):
-        graphx.append(Ufac*value[i+nmbOfSamplesBetweenTimestamp[nmbOfTs]])
-        graphy.append(timestampStartSeconds)
-        timestampStartSeconds += 1
-    plt.plot(graphy, graphx, color='r', linestyle='--', marker='.')
+        graphy.append(Ufac*value[i+nmbOfSamplesBetweenTimestamp[nmbOfTs]])
+        graphx.append(timestampStartSeconds)
+        timestampStartSeconds  += 1
+#        timestamp = datetime.datetime.fromtimestamp(timestampvalue)
+#        timestampStartSeconds = timestamp.strftime('%H:%M:%S')
+    plt.plot(graphx, graphy, color='r', linestyle='--', marker='.')
     plt.xlabel(timestamp.strftime('%Y-%m-%d %H:%M:%S'))
+    #myVar = plt.axes.Axes.set_axis_locator
     plt.show()
 
 #
