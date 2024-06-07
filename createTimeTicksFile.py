@@ -74,7 +74,7 @@ print('Sampling frequency is ' +  str(fs))
 if (fs < 1.0):
     print('ERROR: Sampling frequency below 1 second could not be handled!')
 
-
+timeComp = time # Save values to test with better time information compensation. Se below
 # Fill the time list with the calculated values
 cnt = 0
 indexesBetweenTimestamps = []
@@ -126,8 +126,51 @@ disruptsInTime = []
 timeDifferenceOfDisruptsInTime = []
 for i in range(len(time)-1):
     timeVal = (time[i+1] - time[i])
-    if (timeVal > 1):
+    if (timeVal != 1):   # Handles both negative and positive disruptions
         disruptsInTime.append(i+1)
         timeDifferenceOfDisruptsInTime.append(timeVal)
+
 print('Indexes where time disruptions occur (The index of last consecutive index)' + str(disruptsInTime))
 print('Length in seconds of the disruption ' + str(timeDifferenceOfDisruptsInTime))
+
+
+# Analyze if an interval is consisting of a continous sampling or if the sampling
+# has been interrupted or restarted.
+# The criteria for this is if the number of samples within an interval compared to the timestamp difference
+# of the same interval does not differs more than +/- 15%.
+
+# Subtract all elements by 1 as that is the actual distance
+for i in range(len(timeDifferenceOfDisruptsInTime)):
+    timeDifferenceOfDisruptsInTime[i] -= 1
+
+print(timeDifferenceOfDisruptsInTime)
+
+relativeDisruption = []
+for i in range(len(timeDifferenceOfDisruptsInTime)):
+    relativeDisruption.append(float(timeDifferenceOfDisruptsInTime[i]/float(disruptsInTime[i])))
+
+
+print(relativeDisruption)
+# Positive value means fs has slowed down during the interval
+# Calculate a fs for each interval
+
+# Time compensation
+#
+# for i in range(len(timeComp)):
+#   ts = timeComp[i]
+
+print(timeDifferenceOfDisruptsInTime)
+print(disruptsInTime)
+for i in range(len(timeDifferenceOfDisruptsInTime)):
+        fsInterval = float(timeDifferenceOfDisruptsInTime[i]) / float(disruptsInTime[i])
+        if abs(fsInterval > 0.15):
+            print('The interval ' + str(i) + ' (0, 1, 2...) has been disrupted and no time compensation is done')
+        else:
+            fsInterval += 1
+            print(fsInterval)
+            timeStamp = timeComp[i]
+            print(timeStamp)
+            for j in disruptsInTime:
+
+                print(str(float(fsInterval + timeStamp)))
+                timeStamp += fsInterval
