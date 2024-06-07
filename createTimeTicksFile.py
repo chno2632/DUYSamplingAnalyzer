@@ -1,4 +1,4 @@
-# Create time-axis information where all samples belongs to a specific time in unixtimeformat
+# Create time-axis information where all samples belong to a specific time in unixtimeformat
 # Each timestamp value is a definition of the time of the specific sample
 # The granularity is 1 second and a sampling time less than 1 second is not expected
 
@@ -27,7 +27,7 @@ for i in range(len(rawData)):
     if val < 16384:
         totalNumberOfSamples += 1
         value.append(val)
-        if timeStampInserted == False:
+        if timeStampInserted is False:
             time.append(int(0))
         else:
             timeStampInserted = False
@@ -36,7 +36,8 @@ for i in range(len(rawData)):
         timeStampInserted = True
         timestampRaw.append(val)
 
-if len(time) != len(value): print("Something wrong. value and time has not equal lengths!!")
+if len(time) != len(value):
+    print("Something wrong. value and time has not equal lengths!!")
 
 print(str(len(time)))
 print(str(len(value)))
@@ -47,7 +48,7 @@ print("Total number of samples is " + str(totalNumberOfSamples))
 
 
 # Make a list of index, one index value for all positions not containing zero
-timeIndexes = [] # Holds the indexes where timestamps has originally been written in the raw data file
+timeIndexes = []  # Holds the indexes where timestamps has originally been written in the raw data file
 timeSamplesBetweenTimestamps = []
 samplesBetweenTimeStamps = -1
 for i in range(len(time)):
@@ -64,21 +65,20 @@ for i in range(len(time)):
 
 print("Indexes at timestamps are " + str(timeIndexes))
 
-
-
 # print(timeSamplesBetweenTimestamps)
 # print(sum(timeSamplesBetweenTimestamps))
 # print(str(float(timeIndexes[-1])))
 # print(str(float(sum(timeSamplesBetweenTimestamps))))
 fs = float(timeIndexes[-1])/float(sum(timeSamplesBetweenTimestamps))
 print('Sampling frequency is ' +  str(fs))
-if (fs < 1.0): print('ERROR: Sampling frequency below 1 second could not be handled!')
+if (fs < 1.0):
+    print('ERROR: Sampling frequency below 1 second could not be handled!')
 
 
 # Fill the time list with the calculated values
 cnt = 0
 indexesBetweenTimestamps = []
-cntIndexes = 0 # Always start with a zero interval as start value
+cntIndexes = 0  # Always start with a zero interval as start value
 for i in range(len(time)):
     unixTime = int(time[i])
     if (unixTime > 0):
@@ -127,7 +127,7 @@ timeDifferenceOfDisruptsInTime = []
 for i in range(len(time)-1):
     timeVal = (time[i+1] - time[i])
     if (timeVal > 1):
-       timeDifferenceOfDisruptsInTime disruptsInTime.append(i+1)
+        disruptsInTime.append(i+1)
         timeDifferenceOfDisruptsInTime.append(timeVal)
 print('Indexes where time disruptions occur (The index of last consecutive index)' + str(disruptsInTime))
 print('Length in seconds of the disruption ' + str(timeDifferenceOfDisruptsInTime))
