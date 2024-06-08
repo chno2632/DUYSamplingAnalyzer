@@ -118,44 +118,41 @@ for i in range(len(timestampRawList)-1):
 print('Raw timestamp interval ' + str(timestampRawIntervals))
 
 
-disruptsOfInterval = []
+#  disruptsOfInterval = []
+timeOfEachInterval = []
 samplesDifferenceOfDisruptsInTime = [] # Difference in number of samples
 for i in range(len(timeIndexes)-1):
     timeVal = time[timeIndexes[i+1]]-time[timeIndexes[i+1] - 1] # Not consecutive time
-    disruptsOfInterval.append(i + 1) # Interval number, counts from 1
+#    disruptsOfInterval.append(i + 1) # Interval number, counts from 1
     samplesDifferenceOfDisruptsInTime.append(timeVal-1)
 
 
-if (len(disruptsOfInterval) != len(timestampRaw)-1):
+if (len(samplesDifferenceOfDisruptsInTime) != len(timestampRaw)-1):
     print('Debug output: Number of disrupts doesnt match')
 
-print('Indexes where time disruptions occur (The index of last consecutive index)' + str(disruptsOfInterval))
+#  print('Indexes where time disruptions occur (The index of last consecutive index)' + str(disruptsOfInterval))
 print('Length in samples of the disruption ' + str(samplesDifferenceOfDisruptsInTime))
 
 
-# Analyze if an interval is consisting of a continuous sampling or if the sampling
-# has been interrupted or restarted.
-# The criteria for this is if the number of samples within an interval compared to the timestamp difference
-# of the same interval does not differs more than +/- 15%.
-
-# Subtract all elements by 1 as that is the actual distance
-# for i in range(len(timeDifferenceOfDisruptsInTime)):
-#     timeDifferenceOfDisruptsInTime[i] -= 1
-
-print(samplesDifferenceOfDisruptsInTime)
+# # Analyze if an interval is consisting of a continuous sampling or if the sampling
+# # has been interrupted or restarted.
+# # The criteria for this is if the number of samples within an interval compared to the timestamp difference
+# # of the same interval does not differs more than +/- 15%.
+#
 
 relativeDisruption = []
-for i in range(len(timeIndexes)-1):
-    rawTimeStampLengthOfInterval = time[timeIndexes[i+1] - time[timeIndexes[i]
-    relativeDisruption.append(float(sampleDifferenceOfDisruptsInTime[i]/float(rawTimeStampLengthOfInterval)))
-
-# relativeDisruption = []
-# for i in range(len(samplesDifferenceOfDisruptsInTime)):
-#     relativeDisruption.append(float(sampleDifferenceOfDisruptsInTime[i]/float(disruptsInTime[i])))
+for i in range(len(timeSamplesBetweenTimestamps)):
+    relativeDisruption.append(float(samplesDifferenceOfDisruptsInTime[i]/float(timeSamplesBetweenTimestamps[i])))
 
 
+# for i in range(len(timeIndexes)-1):
+#     rawTimeStampLengthOfInterval = time[timeIndexes[i+1]] - time[timeIndexes[i]]
+#     relativeDisruption.append(float(samplesDifferenceOfDisruptsInTime[i]/float(rawTimeStampLengthOfInterval)))
+# relativeDisruption < 1 : Actual time value should be added by nominal fs + relativeDisrution
+#                    = 1 : No compensation nedded
+#                    < 1 : Actual time value should be added by nominal fs + relativeDisrution
 print(relativeDisruption)
-# Positive value means fs has slowed down during the interval
+
 # Calculate a fs for each interval
 
 f = open("timeStampFileBeforeComp.txt", "w")
@@ -164,34 +161,29 @@ for item in time:
 f.close()
 
 # Time compensation
-#
 # for i in range(len(timeComp)):
-#   ts = timeComp[i]
-# fsIntervalUncompensated = 1.0
-# print(timeDifferenceOfDisruptsInTime)
-# print(disruptsInTime)
-# for i in range(len(timeIndexes)-1):
-#         fsInterval = float(timeDifferenceOfDisruptsInTime[i]) / float(disruptsInTime[i])
-#         timeStamp = timeComp[timeIndexes[i]]
-#         if abs(fsInterval > 0.15):
-#             print('The interval ' + str(i) + ' (0, 1, 2...) has been disrupted and no time compensation is done')
-#             print('Uncompensated fs will be used')
-#             #  TODO add timestamps
-#             for j in range(timeIndexes[i] + 1, timeIndexes[i + 1]):
-#                 timeStamp += fsIntervalUncompensated
-#                 timeComp[j] = int(round(timeStamp))
-#
-#         else:
-#
-#            # print(fsInterval)
-#            # timeStamp = timeComp[i]
-#            # print(timeStamp)
-#             for j in range(indexesBetweenTimestamps[i]+1, indexesBetweenTimestamps[i+1]):
-#                 timeStamp += fsInterval + fsIntervalUncompensated
-#                 timeComp[j] = int(round(timeStamp))
-#
-#
-# f = open("timeStampFileAfterComp.txt", "w")
-# for item in time:
-#     f.write(f"\n{item}")
-# f.close()
+#     ts = timeComp[i]
+fsIntervalUncompensated = 1.0
+for i in range(len(timeIndexes)-1):
+    fsInterval = relativeDisruption[i]
+    timeStamp = timeComp[timeIndexes[i]]
+    if abs(fsInterval > 0.15):
+        print('The interval ' + str(i) + ' (0, 1, 2...) has been disrupted and no time compensation is done')
+        print('Uncompensated fs will be used')
+        #  TODO add timestamps
+        for j in range(timeIndexes[i] + 1, timeIndexes[i + 1]):
+            timeStamp += fsIntervalUncompensated
+            timeComp[j] = int(round(timeStamp))
+    else:
+        # print(fsInterval)
+        # timeStamp = timeComp[i]
+        # print(timeStamp)
+        for j in range(timeIndexes[i] + 1, timeIndexes[i + 1]):
+            timeStamp += fsInterval + fsIntervalUncompensated
+            timeComp[j] = int(round(timeStamp))
+
+
+f = open("timeStampFileAfterComp.txt", "w")
+for item in time:
+    f.write(f"\n{item}")
+f.close()
